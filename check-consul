@@ -1,0 +1,92 @@
+#!/bin/bash
+
+VERSION=v0.1.0
+
+HOST=127.0.0.1
+PORT=8500
+
+function getoptions() {
+    shift 1
+    while getopts h:p:t:vcw OPT; do
+        case $OPT in
+            h)
+                HOST=$OPTARG;;
+            p)
+                PORT=$OPTARG;;
+            t)
+                TEMP_FILE=$OPTARG;;
+            c)
+                ALERT_STATUS=2;;
+            w)
+                ALERT_STATUS=1;;
+            v)
+                echo $VERSION;
+                exit 0;;
+        esac
+    done
+}
+
+function leader_lost() {
+    ALERT_STATUS=1
+    getoptions "$@"
+    
+    curl -s http://$HOST:$PORT/v1/status/leader | egrep -q '^".+"$'
+
+    if [[ $? != 0 ]]; then
+        exit $ALERT_STATUS
+    fi
+
+    exit 0
+}
+
+function server_nodes_changed() {
+    TEMP_FILE=/var/tmp/mackerel-agent/consul-server-nodes-changed
+    ALERT_STATUS=1
+    getoptions "$@"
+
+    PEERS="$(curl -s http://$HOST:$PORT/v1/status/peers)"
+
+    if [[ ! -f $TEMP_FILE ]]; then
+        echo "$PEERS" > $TEMP_FILE
+    fi
+
+    diff $TEMP_FILE <(echo "$PEERS")
+
+    STATUS=$?
+
+    echo "$PEERS" > $TEMP_FILE
+
+    if [[ $STATUS != "0" ]]; then
+        exit $ALERT_STATUS
+    fi
+
+    exit 0
+}
+
+function version() {
+    echo $VERSION
+    exit 0
+}
+
+function usate() {
+    cat <<EOC
+usate: check-consul [subcommand] [options]...
+
+check-consul leader-lost [-h host] [-u user] [-w] [-c]
+
+check-consul server-nodes-changed [-h host] [-u user] [-t temp_file] [-w] [-c]
+
+check-consul version
+EOC
+}
+
+case ${1} in
+    leader-lost)
+        leader_lost "$@";;
+    server-nodes-changed)
+        server_nodes_changed "$@";;
+    version)
+        version;;
+    *)
+        usage;;
+esac
