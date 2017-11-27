@@ -70,7 +70,7 @@ function version() {
 
 function usage() {
     cat <<EOC
-usate: check-consul [subcommand] [options]...
+usage: check-consul [subcommand] [options]...
 
 check-consul leader-lost [-h host] [-u user] [-w] [-c]
 
