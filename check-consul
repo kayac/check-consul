@@ -68,7 +68,7 @@ function version() {
     exit 0
 }
 
-function usate() {
+function usage() {
     cat <<EOC
 usate: check-consul [subcommand] [options]...
 
