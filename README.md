@@ -14,8 +14,8 @@ check-consul [subcommand] [options]...
     Options:
         -h  consul agent host (default: 127.0.0.1)
         -p  consul agent port (default: 8500)
-        -w  set alert level WARNING. exit status 1. (default: not selected)
-        -c  set alert level CRITICAL. exit status 2. (default: selected)
+        -w  set alert level WARNING (exit status 1). (default: not selected)
+        -c  set alert level CRITICAL (exit status 2). (default: selected)
 
 ### check-consul leader-changed [-h host] [-p port] [-t temp_file] [-w] [-c]
     Description:
