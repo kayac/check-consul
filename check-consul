@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=v0.1.1
+VERSION=v0.2.0
 
 HOST=127.0.0.1
 PORT=8500
