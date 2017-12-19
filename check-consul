@@ -36,6 +36,30 @@ function leader_lost() {
     exit 0
 }
 
+function leader_changed() {
+    TEMP_FILE=/var/tmp/mackerel-agent/consul-leader-changed
+    ALERT_STATUS=1
+    getoptions "$@"
+
+    PEERS="$(curl -s http://$HOST:$PORT/v1/status/leader)"
+
+    if [[ ! -f $TEMP_FILE ]]; then
+        echo "$PEERS" > $TEMP_FILE
+    fi
+
+    diff $TEMP_FILE <(echo "$PEERS")
+
+    STATUS=$?
+
+    echo "$PEERS" > $TEMP_FILE
+
+    if [[ $STATUS != "0" ]]; then
+        exit $ALERT_STATUS
+    fi
+
+    exit 0
+}
+
 function server_nodes_changed() {
     TEMP_FILE=/var/tmp/mackerel-agent/consul-server-nodes-changed
     ALERT_STATUS=1
@@ -99,6 +123,8 @@ EOC
 case ${1} in
     leader-lost)
         leader_lost "$@";;
+    leader-changed)
+        leader_changed "$@";;
     server-nodes-changed)
         server_nodes_changed "$@";;
     version)
