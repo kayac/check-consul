@@ -41,17 +41,17 @@ function leader_changed() {
     ALERT_STATUS=1
     getoptions "$@"
 
-    PEERS="$(curl -s http://$HOST:$PORT/v1/status/leader)"
+    LEADER="$(curl -s http://$HOST:$PORT/v1/status/leader)"
 
     if [[ ! -f $TEMP_FILE ]]; then
-        echo "$PEERS" > $TEMP_FILE
+        echo "$LEADER" > $TEMP_FILE
     fi
 
-    diff $TEMP_FILE <(echo "$PEERS")
+    diff $TEMP_FILE <(echo "$LEADER")
 
     STATUS=$?
 
-    echo "$PEERS" > $TEMP_FILE
+    echo "$LEADER" > $TEMP_FILE
 
     if [[ $STATUS != "0" ]]; then
         exit $ALERT_STATUS
