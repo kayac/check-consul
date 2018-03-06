@@ -40,6 +40,7 @@ function leader_lost() {
         exit 0
     fi
 
+    echo "FAIL: $LEADER"
     exit $ALERT_STATUS
 }
 
@@ -61,6 +62,7 @@ function leader_changed() {
     echo "$LEADER" > $TEMP_FILE
 
     if [[ $STATUS != "0" ]]; then
+        echo "FAIL: $LEADER"
         exit $ALERT_STATUS
     fi
 
@@ -86,6 +88,7 @@ function server_nodes_changed() {
     echo "$PEERS" > $TEMP_FILE
 
     if [[ $STATUS != "0" ]]; then
+        echo "FAIL: $PEERS"
         exit $ALERT_STATUS
     fi
 
