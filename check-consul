@@ -23,6 +23,12 @@ function getoptions() {
     done
 }
 
+function sort_json_array() {
+    JSON="$1"
+
+    echo "$JSON" | sed 's/[]["]//g' | tr -s "," "\n" | sort
+}
+
 function leader_lost() {
     ALERT_STATUS=2
     getoptions "$@"
@@ -41,7 +47,7 @@ function leader_changed() {
     ALERT_STATUS=1
     getoptions "$@"
 
-    LEADER="$(curl -s http://$HOST:$PORT/v1/status/leader)"
+    LEADER="$(sort_json_array "$(curl -s http://$HOST:$PORT/v1/status/leader)")"
 
     if [[ ! -f $TEMP_FILE ]]; then
         echo "$LEADER" > $TEMP_FILE
@@ -65,7 +71,7 @@ function server_nodes_changed() {
     ALERT_STATUS=1
     getoptions "$@"
 
-    PEERS="$(curl -s http://$HOST:$PORT/v1/status/peers)"
+    PEERS="$(sort_json_array "$(curl -s http://$HOST:$PORT/v1/status/peers)")"
 
     if [[ ! -f $TEMP_FILE ]]; then
         echo "$PEERS" > $TEMP_FILE
