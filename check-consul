@@ -36,12 +36,11 @@ function leader_lost() {
     LEADER="$(curl -s http://$HOST:$PORT/v1/status/leader)"
 
     if [[ $LEADER =~ ^\".+\"$ ]]; then
-	echo "$ALERT_STATUS: $LEADER"
-        exit $ALERT_STATUS
+        echo "OK: $LEADER"
+        exit 0
     fi
 
-    echo "OK: $LEADER"
-    exit 0
+    exit $ALERT_STATUS
 }
 
 function leader_changed() {
