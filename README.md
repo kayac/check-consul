@@ -44,7 +44,7 @@ check-consul [subcommand] [options]...
         show version.
 
 ## License
-Copyright 2017 KAYAC Inc.
+Copyright 2017-2018 KAYAC Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
