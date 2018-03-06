@@ -33,12 +33,14 @@ function leader_lost() {
     ALERT_STATUS=2
     getoptions "$@"
     
-    curl -s http://$HOST:$PORT/v1/status/leader | egrep -q '^".+"$'
+    LEADER="$(curl -s http://$HOST:$PORT/v1/status/leader)"
 
-    if [[ $? != 0 ]]; then
+    if [[ $LEADER =~ ^\".+\"$ ]]; then
+	echo "$ALERT_STATUS: $LEADER"
         exit $ALERT_STATUS
     fi
 
+    echo "OK: $LEADER"
     exit 0
 }
 
@@ -63,6 +65,7 @@ function leader_changed() {
         exit $ALERT_STATUS
     fi
 
+    echo "OK: $LEADER"
     exit 0
 }
 
@@ -87,6 +90,7 @@ function server_nodes_changed() {
         exit $ALERT_STATUS
     fi
 
+    echo "OK: $PEERS"
     exit 0
 }
 
