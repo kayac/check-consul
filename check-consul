@@ -49,7 +49,7 @@ function leader_changed() {
     ALERT_STATUS=1
     getoptions "$@"
 
-    LEADER="$(sort_json_array "$(curl -s http://$HOST:$PORT/v1/status/leader)")"
+    LEADER="$(curl -s http://$HOST:$PORT/v1/status/leader)"
 
     if [[ ! -f $TEMP_FILE ]]; then
         echo "$LEADER" > $TEMP_FILE
